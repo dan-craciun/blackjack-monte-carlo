@@ -30,3 +30,14 @@ def settle(player_hand, dealer_hand):
     if dealer_total > 21 or player_total > dealer_total:
         return 1
     return -1
+
+def can_split(hand, already_split):
+    if len(hand) == 2 and hand[0] == hand[1] and not already_split:
+        return True
+    return False
+
+def can_double(hand, already_split):
+    if len(hand) == 2 and (not already_split or hand[0] != 11):
+        """Assumes a split hand starts with the original split card at index 0."""
+        return True
+    return False
