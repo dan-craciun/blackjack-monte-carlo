@@ -14,4 +14,5 @@ def test_hard_cards():
 def test_shoe():
     assert len(build_shoe(1)) == 52
     assert sum(build_shoe(1)) == 380 
+
             
