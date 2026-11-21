@@ -32,7 +32,7 @@ SOFT = {
     18: "SddddSSHHH",
 }
 
-# Key = the value of ONE card of the pair. P = split, anything else = don't split (use HARD/SOFT instead)
+# Key = the value of ONE card of the pair. P = split, anything else = don't split, use HARD/SOFT instead
 PAIRS = {
     2:  "PPPPPPHHHH",
     3:  "PPPPPPHHHH",

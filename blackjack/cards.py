@@ -1,10 +1,6 @@
 import random
 
 
-def main():
-    shoe = build_shoe(1)
-    print(shoe)
-
 def build_shoe(number_decks):
     shoe = []
     for i in range (2, 12):
@@ -25,7 +21,3 @@ def hand_value(hand):
     if aces > 0:
         is_soft = True
     return total_value, is_soft
-
-
-if __name__ == "__main__":
-    main()
