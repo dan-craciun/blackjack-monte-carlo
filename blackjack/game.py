@@ -43,8 +43,6 @@ def play_round(shoe):
     else:
         return -1 * (bet_multiplier + split_bet_multiplier)
 
-
-
 # this function plays a hand using basic strategy, where the hand can be a regular one or one coming from a split
 def play_player_hand(hand, upcard, shoe, already_split):
     if already_split == True and hand[0] == 11:
@@ -59,12 +57,6 @@ def play_player_hand(hand, upcard, shoe, already_split):
         else:
             hand.append(shoe.pop())
         
-
-
-
-
-
-
 def dealer_play(hand, shoe):
     total, _ = hand_value(hand)
     while total < 17:
