@@ -5,10 +5,11 @@ import numpy as np
 
 from blackjack.simulate import simulate
 
-def main():
-    random.seed(42)   # same seed so that we are working with the same random numbers
+
+def plot_convergence(profits, path="results/convergence.png"):
+    # Plot the running mean of profits with its 95% CI on a log x-axis.
+    profits = np.array(profits)
     start = 100       # we don't want to plot the first 100 hands as the running means are more volatile
-    profits = np.array(simulate(1_000_000)) 
     k = np.arange(1, len(profits) + 1)        # 1, 2, 3, ..., n (x axis)
     running_mean = np.cumsum(profits) / k     # mean after each round (y axis) 
     fig, ax = plt.subplots()                  # create figure
@@ -21,9 +22,34 @@ def main():
     ax.set_xlabel("Rounds played (log scale)")
     ax.set_ylabel("Mean profit per round (units of bet)")
     ax.set_title("Monte Carlo convergence of blackjack expected value")
-    fig.savefig("results/convergence.png", dpi=150, bbox_inches="tight")
     ax.legend()
+    fig.savefig(path, dpi=150, bbox_inches="tight")
     plt.show()
+
+
+def plot_edge_by_count(table, slope, intercept, path="results/edge_by_count.png"):
+    # Plot mean profit per true-count bucket with 95% CIs and the fitted line.
+    fig, ax = plt.subplots()  # create fig and axes
+    ax.errorbar(table["avg_tc"], table["mean"],         # one dot per bucket, with its 95% CI as a vertical bar
+                yerr=1.96 * table["se"],
+                fmt="o", capsize=3,
+                label="Simulated edge (95% CI)")
+    x = np.linspace(table["avg_tc"].min(), table["avg_tc"].max(), 100) # create 100 evenly spaced points between min relevant count and max relevant count
+    ax.plot(x, intercept + slope * x, label=f"Fit: {intercept:.4f} + {slope:.4f}·TC")   # this plots edge in terms of x which is avarage tc
+    ax.axhline(0, color="gray", linewidth=0.8) # line y = 0
+    ax.set_xlabel("True count (Hi-Lo)")
+    ax.set_ylabel("Mean profit per round (units of bet)")      # Labels
+    ax.set_title("Player edge by true count")
+    ax.legend()
+    fig.savefig(path, dpi=150, bbox_inches="tight")   # save
+    plt.show() # show
+
+
+def main():
+    random.seed(42)   # same seed so that we are working with the same random numbers
+    _, profits = simulate(1_000_000)
+    plot_convergence(profits)
+
 
 if __name__ == "__main__":
     main()
