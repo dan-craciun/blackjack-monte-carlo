@@ -40,7 +40,7 @@ def bankroll_path(true_counts, profits, bet_rule, start_bankroll):
     path = [start_bankroll]
     for tc, profit in zip(true_counts, profits):
         bet = min(bet_rule(tc, bankroll), bankroll)
-        bankroll += bet * profit
+        bankroll = max(bankroll + bet * profit, 0)
         path.append(bankroll)
         if bankroll < 1:
             break

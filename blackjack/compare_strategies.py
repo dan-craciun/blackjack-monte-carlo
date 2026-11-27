@@ -5,6 +5,7 @@ import numpy as np
 
 from blackjack.simulate import simulate
 from blackjack.betsize import flat, spread, full_kelly, half_kelly, bankroll_path
+from blackjack.plots import plot_risk_of_ruin
 
 STRATEGIES = {
     "Flat": flat,
@@ -49,19 +50,32 @@ def summarize_strategies(results):
     summary["ci_high"] = summary["mean_final"] + 1.96 * summary["se_mean"]
     return summary
 
+def bankroll_sweep(true_counts, profits, strategies, n_paths, n_rounds, bankrolls):
+    # Run the strategy comparison once per starting bankroll, on the same rounds.
+    # Return all summaries stacked into one table, with a start_bankroll column
+    summaries = []
+    for start_bankroll in bankrolls:
+        results = run_paths(true_counts, profits, strategies, n_paths, n_rounds, start_bankroll)
+        summary = summarize_strategies(results)
+        summary["start_bankroll"] = start_bankroll
+        summaries.append(summary)
+    return pd.concat(summaries)
+
 def main():
     pd.set_option("display.max_rows", None)      # show every row of summary 
     pd.set_option("display.max_columns", None)   # show every column of summary 
     pd.set_option("display.width", None)         # use the full terminal width, no wrapping
     random.seed(42)
-    n_paths = 200    # 200 different players
-    n_rounds = 10_000 # playing 10k rounds each
-    start_bankroll = 1_000
+    n_paths = 1_000
+    n_rounds = 10_000
+    bankrolls = [100, 150, 200, 300, 400, 500, 750, 1_000]
 
     true_counts, profits = simulate(n_paths * n_rounds)
-    results = run_paths(true_counts, profits, STRATEGIES, n_paths, n_rounds, start_bankroll)
-    summary = summarize_strategies(results)
-    print(summary)
-
+    bankrolls = [100, 200, 500, 1_000] # different starting bankrolls
+    sweep = bankroll_sweep(true_counts, profits, STRATEGIES, n_paths, n_rounds, bankrolls)   # runs multiple paths, through multiple strategies, through multiple bankrolls, and saves data summary
+    ror = sweep.reset_index().pivot(index="start_bankroll", columns="strategy", values="risk_of_ruin") # risk of ruin table: rows = starting bankroll, columns = strategy
+    print(ror)
+    print(sweep.reset_index().sort_values(["start_bankroll", "strategy"])) # this prints the whole statistic
+    plot_risk_of_ruin(ror)
 if __name__ == "__main__":
     main()

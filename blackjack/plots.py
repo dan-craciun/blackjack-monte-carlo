@@ -2,6 +2,7 @@ import random
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import PercentFormatter
 
 from blackjack.simulate import simulate
 
@@ -44,6 +45,18 @@ def plot_edge_by_count(table, slope, intercept, path="results/edge_by_count.png"
     fig.savefig(path, dpi=150, bbox_inches="tight")   # save
     plt.show() # show
 
+def plot_risk_of_ruin(ror, path="results/risk_of_ruin.png"):
+    # Plot risk of ruin against starting bankroll, one line per strategy.
+    fig, ax = plt.subplots()
+    for strategy in ror.columns:                   # one line per strategy
+        ax.plot(ror.index, ror[strategy], marker="o", label=strategy)
+    ax.yaxis.set_major_formatter(PercentFormatter(1.0))   # show 0.25 as 25%
+    ax.set_xlabel("Starting bankroll (units)")
+    ax.set_ylabel("Risk of ruin over 10,000 rounds")
+    ax.set_title("Risk of ruin by starting bankroll")
+    ax.legend()
+    fig.savefig(path, dpi=150, bbox_inches="tight")
+    plt.show()
 
 def main():
     random.seed(42)   # same seed so that we are working with the same random numbers
