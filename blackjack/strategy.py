@@ -47,7 +47,7 @@ PAIRS = {
 }
 
 def basic_strategy(hand, upcard, can_double, can_split):
-    total, is_soft = hand_value(hand)       #total will be the dictionary key, is_soft is necessary to figure out which dictionry to use
+    total, is_soft = hand_value(hand)       #total will be the dictionary key, is_soft is necessary to figure out which dictionary to use
     column = upcard - 2                     #this converts dealer's hand with the index of the letter within the string that is a value of it's corresponding key in the dictionary
     if can_split and hand[0] == hand[1]:    #first we check pairs 
         decision = PAIRS[hand[0]]           #use pairs dictionary
@@ -61,7 +61,7 @@ def basic_strategy(hand, upcard, can_double, can_split):
         else:
             if total >= 17:
                 return "stand"
-            decision = HARD[total]          #use hard dictionay
+            decision = HARD[total]          #use hard dictionary
     decision = decision[column]             #decision becomes its' key's value at index column
     if decision == "H":
         return "hit"

@@ -34,7 +34,7 @@ def summarize(profits):
 
 def main():
     random.seed(42) # added a seed so that anyone can rerun the code and get the same results
-    profits = simulate(10_000_000)
+    _, profits = simulate(10_000_000)
     mean, std, se, ci_low, ci_high = summarize(profits)
     print(f"Mean profit per round:  {mean:.4f}")
     print(f"House edge:             {-mean:.2%}")

@@ -10,8 +10,8 @@ def edge_by_count(true_counts, profits, min_rounds=10_000):
     df = pd.DataFrame({"true_count" : true_counts, "profit" : profits}) # build a data frame with 2 columns: tc and profit
     df["tc_bucket"] = np.floor(df["true_count"]).astype(int) # this rounds down tcs 
     table = df.groupby("tc_bucket").agg(       # group by the same rounded-down tc                      
-        avg_tc=("true_count", "mean"),         # this gives the avarage tc of the group
-        mean=("profit", "mean"),               # this gives the avarage profit of the group
+        avg_tc=("true_count", "mean"),         # this gives the average tc of the group
+        mean=("profit", "mean"),               # this gives the average profit of the group
         std=("profit", "std"),                 # std of the profits within each group
         count=("profit", "count"),             # no of hands per group
     )
@@ -19,7 +19,7 @@ def edge_by_count(true_counts, profits, min_rounds=10_000):
     table["se"] = table["std"] / np.sqrt(table["count"])  # standard error of each group
     table["ci_low"] = table["mean"] - 1.96 * table["se"]  # CI_low of each group
     table["ci_high"] = table["mean"] + 1.96 * table["se"] # CI_high of each group
-    table = table[table["count"] >= min_rounds]           # this filters out groups with too few hands, because these are very voltatile and unrepresentative
+    table = table[table["count"] >= min_rounds]           # this filters out groups with too few hands, because these are very volatile and unrepresentative
     return table
 
 def fit_edge(table):

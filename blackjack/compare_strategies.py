@@ -68,8 +68,6 @@ def main():
     random.seed(42)
     n_paths = 1_000
     n_rounds = 10_000
-    bankrolls = [100, 150, 200, 300, 400, 500, 750, 1_000]
-
     true_counts, profits = simulate(n_paths * n_rounds)
     bankrolls = [100, 200, 500, 1_000] # different starting bankrolls
     sweep = bankroll_sweep(true_counts, profits, STRATEGIES, n_paths, n_rounds, bankrolls)   # runs multiple paths, through multiple strategies, through multiple bankrolls, and saves data summary
